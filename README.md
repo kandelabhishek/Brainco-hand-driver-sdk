@@ -1,22 +1,10 @@
 # 🤖 BrainCo Hand on Unitree G1 — Easy Setup Guide
 ---
 
-## 📌 The Short Version
-
-1. Copy the SDK to the G1
-2. Download & install the USB driver
-3. Unplug and replug the hand cable
-4. Build the program
-5. Run it 🎉
-
----
-
 | Without the driver ❌ | With the driver ✅ |
 |---|---|
 | Hand shows up as `/dev/ttyACM0` | Hand shows up as `/dev/ttyCH343USB0` |
 | Hand does **not** respond | Hand works |
-
-So we must install the **WCH CH343 driver** once on every new robot.
 
 ---
 
@@ -25,7 +13,6 @@ So we must install the **WCH CH343 driver** once on every new robot.
 ```bash
 git clone https://github.com/kandelabhishek/brainco-hand-driver-sdk.git
 ```
-
 ---
 
 ## 2.Build the USB driver
@@ -41,9 +28,7 @@ make
 cd ~/brainco-hand-sdk/tools
 git clone https://github.com/WCHSoftGroup/ch343ser_linux.git
 ```
-
 ---
-
 
 ### 3. Install it (so it loads every boot)
 

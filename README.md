@@ -18,14 +18,14 @@ git clone https://github.com/kandelabhishek/brainco-hand-driver-sdk.git
 ## 2.Build the USB driver
 
 ```bash
-ls ~/brainco-hand-sdk/tools/ch343ser_linux/driver
-cd ~/brainco-hand-sdk/tools/ch343ser_linux/driver
+ls ~/brainco-hand-driver-sdk/tools/ch343ser_linux/driver
+cd ~/brainco-hand-driver-sdk/tools/ch343ser_linux/driver
 make
 ```
 #you can download the driver seperately from the link below
 
 ```bash
-cd ~/brainco-hand-sdk/tools
+cd ~/brainco-hand-driver-sdk/tools
 git clone https://github.com/WCHSoftGroup/ch343ser_linux.git
 ```
 ---
@@ -61,7 +61,7 @@ ls /dev/ttyCH343USB*
 ```
 
 > `USB0` and `USB1` are the hands. `USB2` is something else on the robot — ignore it.
-
+>If you cant see the abouve output then restart the robot
 ---
 
 ## Step 4 — Give yourself permission
@@ -74,7 +74,7 @@ Then **log out and SSH back in**:
 
 ```bash
 exit
-ssh unitree@<G1-IP>
+ssh unitree@192.168.123.164
 ```
 
 ---
@@ -91,7 +91,7 @@ make
 ## Step 6 — Find which port is which hand
 
 ```bash
-cd ~/brainco-hand-sdk/c/demo
+cd ~/brainco-hand-driver-sdk/c/demo
 for p in /dev/ttyCH343USB0 /dev/ttyCH343USB1; do
   for id in 126 127; do
     echo "== $p id=$id"
@@ -109,8 +109,6 @@ Look for lines that say `Device: Revo2 ...`:
   Device: Revo2 Touch (Capacitive), SN: BCXTR...   ← RIGHT hand ✅
 ```
 
-> 💡 `BCXT**L**` = Left, `BCXT**R**` = Right
-
 Usually:
 
 | Hand | Port | ID |
@@ -120,7 +118,7 @@ Usually:
 
 ---
 
-## Step 7 — Move the hand 🎉
+## Step 7 — Move the hand 
 
 ### Basic command
 
@@ -178,7 +176,7 @@ sudo ./hand_demo.exe -m /dev/ttyCH343USB1 460800 127 0
 
 ---
 
-## 🚀 Lazy Mode (all-in-one script)
+## easy mode(all-in-one script)
 
 If the driver folder is already in `tools/` :
 

@@ -1,8 +1,4 @@
 # 🤖 BrainCo Hand on Unitree G1 — Easy Setup Guide
-
-Follow these steps **in order** on any new G1 robot.
-Total time: about 10 minutes.
-
 ---
 
 ## 📌 The Short Version
@@ -15,10 +11,6 @@ Total time: about 10 minutes.
 
 ---
 
-## ❓ Why do I need a driver?
-
-The hands plug into the G1 through a small **USB adapter** (made by WCH).
-
 | Without the driver ❌ | With the driver ✅ |
 |---|---|
 | Hand shows up as `/dev/ttyACM0` | Hand shows up as `/dev/ttyCH343USB0` |
@@ -28,79 +20,39 @@ So we must install the **WCH CH343 driver** once on every new robot.
 
 ---
 
-## Step 1 — Copy the SDK to the G1
-
-Run this **on your laptop**:
+## 1.clone the sdk
 
 ```bash
-scp -r ~/brainco-hand-sdk unitree@<G1-IP>:~/
+git clone https://github.com/kandelabhishek/brainco-hand-driver-sdk.git
 ```
-
-Then log in to the robot:
-
-```bash
-ssh unitree@<G1-IP>
-```
-
-> 💡 From now on, every command runs **on the G1** (your prompt should say `unitree@ubuntu`).
 
 ---
 
-## Step 2 — Download the USB driver
-
-Pick **one** option.
-
-### Option A: The driver is already in the SDK (easiest)
-
-Check if this folder exists:
+## 2.Build the USB driver
 
 ```bash
 ls ~/brainco-hand-sdk/tools/ch343ser_linux/driver
+cd ~/brainco-hand-sdk/tools/ch343ser_linux/driver
+make
 ```
-
-If you see `ch343.c  ch343.h  Makefile` → ✅ skip to **Step 3**.
-
-### Option B: G1 has internet
+#you can download the driver seperately from the link below
 
 ```bash
 cd ~/brainco-hand-sdk/tools
 git clone https://github.com/WCHSoftGroup/ch343ser_linux.git
 ```
 
-### Option C: G1 has NO internet
-
-Run this **on your laptop**, then copy it over:
-
-```bash
-git clone https://github.com/WCHSoftGroup/ch343ser_linux.git
-scp -r ch343ser_linux unitree@<G1-IP>:~/brainco-hand-sdk/tools/
-```
-
-> No `git`? Download the ZIP from
-> https://github.com/WCHSoftGroup/ch343ser_linux → green **Code** button → **Download ZIP**,
-> unzip it, rename the folder to `ch343ser_linux`, and `scp` it as above.
-
 ---
 
-## Step 3 — Install the USB driver
 
-### 3.1 Build the driver
-
-```bash
-cd ~/brainco-hand-sdk/tools/ch343ser_linux/driver
-make
-```
-
-✅ Success looks like: `=== The target driver file has been generated ===`
-
-### 3.2 Install it (so it loads every boot)
+### 3. Install it (so it loads every boot)
 
 ```bash
 sudo make load
 sudo make install
 ```
 
-### 3.3 Stop the old driver from taking the hand
+### 3.1 Stop the old driver from taking the hand
 
 ```bash
 sudo rmmod cdc_acm
@@ -109,9 +61,9 @@ echo "blacklist cdc_acm" | sudo tee /etc/modprobe.d/blacklist-cdc_acm.conf
 
 > If it says `Module cdc_acm is in use`, **unplug the hand cable first**, then run it again.
 
-### 3.4 Unplug the hand adapter, wait 3 seconds, plug it back in
+### 3.2 Unplug the hand adapter, wait 3 seconds, plug it back in
 
-### 3.5 Check it worked
+### 3.3 Check it worked
 
 ```bash
 ls /dev/ttyCH343USB*
@@ -149,9 +101,6 @@ cd ~/brainco-hand-sdk/c/demo
 make clean
 make
 ```
-
-✅ Success ends with: `[linux] build done`
-
 ---
 
 ## Step 6 — Find which port is which hand
@@ -181,8 +130,8 @@ Usually:
 
 | Hand | Port | ID |
 |---|---|---|
-| 🤚 Left | `/dev/ttyCH343USB0` | `126` |
-| ✋ Right | `/dev/ttyCH343USB1` | `127` |
+| Left Hand | `/dev/ttyCH343USB0` | `126` |
+| Right Hand| `/dev/ttyCH343USB1` | `127` |
 
 ---
 
@@ -197,14 +146,12 @@ sudo ./hand_demo.exe -m <PORT> 460800 <ID> <DEMO>
 ### Most useful commands
 
 ```bash
-# Left hand — open/close forever (Ctrl+C to stop)
-sudo ./hand_demo.exe -m /dev/ttyCH343USB0 460800 126 7
+# Left hand
+sudo ./hand_demo.exe -m /dev/ttyCH343USB0 460800 126 0
 
-# Right hand — open/close forever
-sudo ./hand_demo.exe -m /dev/ttyCH343USB1 460800 127 7
+# Right hand 
+sudo ./hand_demo.exe -m /dev/ttyCH343USB1 460800 127 0
 
-# Left hand — run ALL demos
-sudo ./hand_demo.exe -m /dev/ttyCH343USB0 460800 126
 ```
 
 ### Demo list
@@ -220,19 +167,6 @@ sudo ./hand_demo.exe -m /dev/ttyCH343USB0 460800 126
 | `6` | Read touch sensors |
 | `7` | **Open/close loop forever** |
 
-### Both hands at once
-
-Open **two** SSH windows:
-
-- Window 1 → left hand command
-- Window 2 → right hand command
-
-### Stopping
-
-- Press **Ctrl+C once** → stops nicely, hand opens
-- Press **Ctrl+C twice** → force quit
-
----
 
 ## 🛠️ Problems & Fixes
 
@@ -261,7 +195,7 @@ Open **two** SSH windows:
 
 ## 🚀 Lazy Mode (all-in-one script)
 
-If the driver folder is already in `tools/` (Step 2), this does Steps 3–5 for you:
+If the driver folder is already in `tools/` :
 
 ```bash
 cd ~/brainco-hand-sdk
